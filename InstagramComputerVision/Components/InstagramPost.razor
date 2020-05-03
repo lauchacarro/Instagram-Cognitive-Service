@@ -1,0 +1,43 @@
+﻿@*https://codepen.io/itslit/pen/OvZrvR*@
+
+<div class="instagram-post">
+    <div class="header level">
+        <div class="level-left">
+            <figure class="image is-32x32 zero-margin">
+                <img src="@Media.UserPicture" />
+            </figure>
+            <span class="username">@Media.Username</span>
+        </div>
+    </div>
+    <div class="image-container"
+         style="background-image: url('@Media.ImageUrl.')"
+         @ondblclick=@LikeHandle>
+    </div>
+    <div class="content">
+        <div class="heart">
+            <i class=@("far fa-heart fa-lg " + (Media.HasLiked? "fas": string.Empty)) @onclick=@LikeHandle>
+
+            </i>
+        </div>
+        <p class="likes">@Media.LikesCount likes</p>
+        <p class="caption"><span>@Media.Username</span> @((MarkupString)Media.Caption)</p>
+    </div>
+</div>
+
+@code{
+    [Parameter]
+    public InstaPost Media { get; set; }
+
+    [Parameter]
+    public EventCallback<InstaPost> OnLiked { get; set; }
+
+    async Task LikeHandle()
+    {
+        Media.HasLiked = !Media.HasLiked;
+        StateHasChanged();
+        if (Media.HasLiked)
+        {
+            await OnLiked.InvokeAsync(Media);
+        }
+    }
+}

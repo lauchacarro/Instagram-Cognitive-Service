@@ -1,0 +1,43 @@
+﻿@page "/settings"
+@inject ILocalStorageService localStorageService
+@inject NavigationManager navigationManager
+
+<h3>Settings</h3>
+
+<div class="form-group">
+    <label>Computer Vision Key</label>
+    <input type="text" class="form-control" placeholder="Computer Vision Key" @bind="key">
+</div>
+<div class="form-group">
+    <label>Computer Vision Endpoint</label>
+    <input type="text" class="form-control" placeholder="Computer Vision Endpoint" @bind="endpoint">
+</div>
+<button type="submit" class="btn btn-primary" @onclick=ApplyClick>Apply</button>
+
+@code {
+    private string key = string.Empty;
+    private string endpoint = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (await localStorageService.ContainKeyAsync(Constant.COMPUTERVISIONKEY))
+        {
+            key = await localStorageService.GetItemAsync<string>(Constant.COMPUTERVISIONKEY);
+        }
+        if (await localStorageService.ContainKeyAsync(Constant.COMPUTERVISIONENDPOINT))
+        {
+            endpoint = await localStorageService.GetItemAsync<string>(Constant.COMPUTERVISIONENDPOINT);
+        }
+    }
+
+
+    async Task ApplyClick()
+    {
+        if (!string.IsNullOrWhiteSpace(key) && !string.IsNullOrWhiteSpace(endpoint))
+        {
+            await localStorageService.SetItemAsync(Constant.COMPUTERVISIONKEY, key);
+            await localStorageService.SetItemAsync(Constant.COMPUTERVISIONENDPOINT, endpoint);
+            navigationManager.NavigateTo("/");
+        }
+    }
+}

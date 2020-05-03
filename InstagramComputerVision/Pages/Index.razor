@@ -1,0 +1,75 @@
+﻿@page "/"
+@inject InstagramService instagramService
+@inject ILocalStorageService localStorageService
+@inject NavigationManager navigationManager
+
+<div class="form-group">
+    <label for="exampleInputEmail1">Tag to Search</label>
+    <input type="text" class="form-control" placeholder="Tag" @bind="tag">
+    <small class="form-text text-muted">
+        Analyze the tag posts you enter
+    </small>
+</div>
+<button type="submit" class="btn btn-primary" @onclick=SearchClick>Search</button>
+
+
+@if (isLoading)
+{
+    <Loader></Loader>
+}
+else
+{
+    <SurveyPrompt Title="Double Tap for Analyze Post ❤" />
+    <div class="container-inner">
+        <div class="row justify-content-center">
+            @foreach (var item in posts)
+            {
+                @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
+                {
+                    <div class="col-sm-3">
+                        <InstagramPost Media=@item OnLiked=LikedHandle />
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+}
+
+
+@code{
+    private bool isLoading = true;
+    private string tag = "blazor";
+    private IEnumerable<InstaPost> posts = Enumerable.Empty<InstaPost>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        posts = await instagramService.GetInstaMedias(tag);
+        isLoading = false;
+        StateHasChanged();
+    }
+
+    async Task SearchClick()
+    {
+        isLoading = true;
+        StateHasChanged();
+        posts = await instagramService.GetInstaMedias(tag);
+        isLoading = false;
+        StateHasChanged();
+    }
+
+    async Task LikedHandle(InstaPost instaPost)
+    {
+        if (await localStorageService.ContainKeyAsync(Constant.COMPUTERVISIONKEY))
+        {
+            await localStorageService.SetItemAsync(Constant.INSTAPOST, instaPost);
+            navigationManager.NavigateTo("Analyze");
+        }
+        else
+        {
+            navigationManager.NavigateTo("Settings");
+        }
+    }
+}
+
+
