@@ -1,7 +1,6 @@
-using System;
-
 using Blazored.LocalStorage;
 
+using InstagramComputerVision.Options;
 using InstagramComputerVision.Services;
 
 using Microsoft.AspNetCore.Builder;
@@ -30,6 +29,8 @@ namespace InstagramComputerVision
             services.AddBlazoredLocalStorage();
             services.AddSingleton<InstagramService>();
             services.AddTransient<ComputerVisionService>();
+
+            services.Configure<InstagramOptions>(Configuration.GetSection(nameof(InstagramOptions)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -37,8 +38,6 @@ namespace InstagramComputerVision
         {
             if (env.IsDevelopment())
             {
-                Environment.SetEnvironmentVariable(Constant.INSTAUSERNAME, Configuration["Instagram:Username"]);
-                Environment.SetEnvironmentVariable(Constant.INSTAPASSWORD, Configuration["Instagram:Password"]);
                 app.UseDeveloperExceptionPage();
             }
             else

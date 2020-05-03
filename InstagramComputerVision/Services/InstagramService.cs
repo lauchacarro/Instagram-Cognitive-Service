@@ -9,18 +9,21 @@ using InstagramApiSharp.API.Builder;
 using InstagramApiSharp.Classes;
 
 using InstagramComputerVision.Models;
+using InstagramComputerVision.Options;
+
+using Microsoft.Extensions.Options;
 
 namespace InstagramComputerVision.Services
 {
     public class InstagramService
     {
         private readonly IInstaApi _instaApi;
-        public InstagramService()
+        public InstagramService(IOptions<InstagramOptions> options)
         {
             UserSessionData userSession = new UserSessionData
             {
-                UserName = Environment.GetEnvironmentVariable(Constant.INSTAUSERNAME),
-                Password = Environment.GetEnvironmentVariable(Constant.INSTAPASSWORD)
+                UserName = options.Value.Username,
+                Password = options.Value.Password
             };
 
             _instaApi = InstaApiBuilder.CreateBuilder()
@@ -40,7 +43,7 @@ namespace InstagramComputerVision.Services
             return tagFeed.Value.Medias.Select(x => new InstaPost
             {
                 Username = x.User.UserName,
-                Caption = x.Caption.Text,
+                Caption = x.Caption?.Text ?? string.Empty,
                 HasLiked = x.HasLiked,
                 LikesCount = x.LikesCount,
                 UserPicture = x.User.ProfilePicture,
