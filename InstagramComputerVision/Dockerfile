@@ -20,4 +20,4 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-CMD ASPNETCORE_URLS=http://*:$PORT dotnet LatinoNETOnline.App.Server.dll
+CMD ASPNETCORE_URLS=http://*:$PORT dotnet InstagramComputerVision.dll
