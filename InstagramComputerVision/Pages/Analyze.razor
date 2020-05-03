@@ -1,0 +1,33 @@
+﻿@page "/analyze"
+@using InstagramApiSharp.Classes.Models
+@inject ILocalStorageService localStorageService
+@inject NavigationManager navigationManager
+@inject ComputerVisionService computerVisionService
+
+@if (isLoading)
+{
+    <Loader></Loader>
+}
+else
+{
+    <div class="container-inner">
+        <div class="row">
+            <div class="col-sm-3">
+                <InstagramPost Media="media" />
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool isLoading = true;
+    private InstaPost media = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        media = await localStorageService.GetItemAsync<InstaPost>(Constant.INSTAPOST);
+
+        isLoading = false;
+        StateHasChanged();
+    }
+}
