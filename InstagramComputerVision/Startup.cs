@@ -1,5 +1,6 @@
+using System.Reflection;
 using Blazored.LocalStorage;
-
+using BlazorScopedCss;
 using InstagramComputerVision.Options;
 using InstagramComputerVision.Services;
 
@@ -26,6 +27,7 @@ namespace InstagramComputerVision
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddBlazorScopedCss(Assembly.GetExecutingAssembly());
             services.AddBlazoredLocalStorage();
             services.AddSingleton<InstagramService>();
             services.AddTransient<ComputerVisionService>();

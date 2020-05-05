@@ -6,6 +6,7 @@ using InstagramApiSharp;
 using InstagramApiSharp.API;
 using InstagramApiSharp.API.Builder;
 using InstagramApiSharp.Classes;
+using InstagramApiSharp.Classes.Models;
 
 using InstagramComputerVision.Models;
 using InstagramComputerVision.Options;
@@ -30,22 +31,32 @@ namespace InstagramComputerVision.Services
                    .Build();
         }
 
-        public async Task<IEnumerable<InstaPost>> GetInstaMedias(string tag)
+        public async Task<IEnumerable<InstaPost>> GetInstaPosts(string key)
         {
             if (!_instaApi.IsUserAuthenticated)
             {
                 await _instaApi.LoginAsync();
             }
 
-            var tagFeed = await _instaApi.FeedProcessor.GetTagFeedAsync(tag, PaginationParameters.MaxPagesToLoad(1));
+            List<InstaMedia> medias;
+            if (key.StartsWith("@"))
+            {
+                var userMedia = await _instaApi.UserProcessor.GetUserMediaAsync(key.Substring(1), PaginationParameters.MaxPagesToLoad(5));
+                medias = userMedia.Value;
+            }
+            else
+            {
+                var tagFeed = await _instaApi.FeedProcessor.GetTagFeedAsync(key, PaginationParameters.MaxPagesToLoad(1));
+                medias = tagFeed.Value.Medias;
+            }
 
-            if(tagFeed.Value is null)
+            if (medias is null)
             {
                 return Enumerable.Empty<InstaPost>();
             }
             else
             {
-                return tagFeed.Value.Medias.Select(x => new InstaPost
+                return medias.Select(x => new InstaPost
                 {
                     Username = x.User.UserName,
                     Caption = x.Caption?.Text ?? string.Empty,

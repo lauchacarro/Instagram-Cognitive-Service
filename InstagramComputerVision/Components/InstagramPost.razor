@@ -1,38 +1,74 @@
 ﻿@*https://codepen.io/itslit/pen/OvZrvR*@
 
-<div class="instagram-post">
-    <div class="header level">
-        <div class="level-left">
-            <figure class="image is-32x32 zero-margin">
-                <img src="@Media.UserPicture" />
-            </figure>
-            <a href=@($"https://instagram.com/{Media.Username}") target="_blank" style="color:black;"><span class="username">@Media.Username</span></a>
-        </div>
-        <div class="level-right">
-            <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-        </div>
-    </div>
-    <div class="image-container"
-         style="background-image: url('@Media.ImageUrl.')"
-         @ondblclick=@LikeHandle>
-    </div>
-    <div class="content">
-        <div class="heart">
-            <i class=@("far fa-heart fa-lg " + (Media.HasLiked? "fas": string.Empty)) @onclick=@LikeHandle>
+<BlazorScopedCss.ScopedStyle EmbeddedStylePath="InstagramPost.razor.css"
+                             Parent="this"
+                             AfterInit="StateHasChanged"
+                             @ref="scopedStyle" />
 
-            </i>
-        </div>
-        <p class="likes">@Media.LikesCount likes</p>
-        <p class="caption"><a href=@($"https://instagram.com/{Media.Username}") target="_blank" style="color:black;"><span class="username">@Media.Username</span></a> @((MarkupString)Media.Caption)</p>
-    </div>
-</div>
+@if (scopedStyle?.IsComplete ?? false)
+{
+    <div class=@scopedStyle.CssScopedClasses("instagram-post")>
 
+        <div class=@($"{scopedStyle.CssScopedClasses("header")} level")>
+
+            <div class="level-left">
+
+                <figure class=@($"{scopedStyle.CssScopedClasses("header-image")} zero-margin")>
+
+                    <img class=@scopedStyle.CssScopedClasses("header-user-image") src="@Media.UserPicture" />
+
+                </figure>
+
+                <a href=@($"https://instagram.com/{Media.Username}") target="_blank" class=@scopedStyle.CssScopedClasses("username-link")><span class=@scopedStyle.CssScopedClasses("username", "username-top")>@Media.Username</span></a>
+
+            </div>
+
+            <div class="level-right">
+
+                <i class=@($"fa fa-ellipsis-v {scopedStyle.CssScopedClasses("pointer")}") aria-hidden="true"></i>
+
+            </div>
+
+        </div>
+
+        <div class=@scopedStyle.CssScopedClasses("image-container")
+             style="background-image: url('@Media.ImageUrl.')"
+             @ondblclick=@LikeHandle>
+        </div>
+
+        <div class=@scopedStyle.CssScopedClasses("content")>
+
+            <div class=@scopedStyle.CssScopedClasses("pointer")>
+
+                <i class=@("far fa-heart fa-lg " + (Media.HasLiked ? "fas " + scopedStyle.CssScopedClasses("heart-red") : string.Empty)) @onclick=@LikeHandle>
+
+                </i>
+
+            </div>
+
+            <p class=@scopedStyle.CssScopedClasses("likes")>@Media.LikesCount likes</p>
+
+            <p class=@scopedStyle.CssScopedClasses("caption")>
+
+                <a href=@($"https://instagram.com/{Media.Username}") target="_blank" class=@scopedStyle.CssScopedClasses("username-link")>
+
+                    <span class=@scopedStyle.CssScopedClasses("username")>@Media.Username</span>
+
+                </a>
+
+                @((MarkupString)Media.Caption)
+            </p>
+        </div>
+    </div>
+}
 @code{
     [Parameter]
     public InstaPost Media { get; set; }
 
     [Parameter]
     public EventCallback<InstaPost> OnLiked { get; set; }
+
+    BlazorScopedCss.ScopedStyle scopedStyle;
 
     async Task LikeHandle()
     {

@@ -18,12 +18,13 @@
     <link rel="stylesheet" href="https://cssgram-cssgram.netdna-ssl.com/cssgram.min.css" />
 
     <link href="css/site.css" rel="stylesheet" />
+    <style id="scopedCss"></style>
 </head>
 <body>
     <app>
         <component type="typeof(App)" render-mode="ServerPrerendered" />
     </app>
-    
+
     <div id="blazor-error-ui">
         <environment include="Staging,Production">
             An error has occurred. This application may no longer respond until reloaded.
@@ -36,5 +37,6 @@
     </div>
 
     <script src="_framework/blazor.server.js"></script>
+    <script src="_content/BlazorScopedCss/jsInterop.js"></script>
 </body>
 </html>
