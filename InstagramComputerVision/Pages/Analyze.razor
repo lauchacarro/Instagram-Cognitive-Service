@@ -1,5 +1,5 @@
 ﻿@page "/analyze"
-@using InstagramApiSharp.Classes.Models
+@using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models
 @inject ILocalStorageService localStorageService
 @inject NavigationManager navigationManager
 @inject ComputerVisionService computerVisionService
@@ -15,19 +15,135 @@ else
             <div class="col-sm-3">
                 <InstagramPost Media="media" />
             </div>
+            <div class="col-sm-9">
+                @if (isLoadingAnalyze)
+                {
+                    <Loader></Loader>
+                }
+                else
+                {
+                    <div class="container" style="overflow-y: scroll; height:600px;">
+                        <div>
+                            <h5>Image Type:</h5>
+                            <InstagramNotification Title="Line Drawing Type:" SubTitle=@(analyze.ImageType.ClipArtType.ToString()) ImageUrl=@media.ImageUrl />
+                            <InstagramNotification Title="Clip Art Type:" SubTitle=@(analyze.ImageType.LineDrawingType.ToString()) ImageUrl=@media.ImageUrl />
+                        </div>
+
+                        <div>
+                            <h5>Color Scheme:</h5>
+                            <InstagramNotification Title="Is black and white?:" SubTitle=@(analyze.Color.IsBWImg.ToString()) ImageUrl=@media.ImageUrl />
+
+                            <InstagramNotification Title="Accent color:" SubTitle=@(analyze.Color.AccentColor) ImageUrl=@media.ImageUrl  Color="true"/>
+
+                            <InstagramNotification Title="Dominant background color:" SubTitle=@(analyze.Color.DominantColorBackground) ImageUrl=@media.ImageUrl />
+
+                            <InstagramNotification Title="Dominant foreground color:" SubTitle=@(analyze.Color.DominantColorForeground) ImageUrl=@media.ImageUrl />
+
+                            <InstagramNotification Title="Dominant colors:" SubTitle=@(string.Join(",", analyze.Color.DominantColors)) ImageUrl=@media.ImageUrl />
+                        </div>
+                        <div>
+                            <h5>Summary:</h5>
+                            @foreach (var caption in analyze.Description.Captions)
+                            {
+                                <InstagramNotification Title=@caption.Text SubTitle=@caption.Confidence.ToString() ImageUrl=@media.ImageUrl WithConfidence="true" />
+                            }
+                        </div>
+                        <div>
+                            <h5>Categories:</h5>
+                            @foreach (var category in analyze.Categories)
+                            {
+                                <InstagramNotification Title=@category.Name SubTitle=@category.Score.ToString() ImageUrl=@media.ImageUrl WithConfidence="true" />
+                            }
+                        </div>
+                        <div>
+                            <h5>Tags:</h5>
+                            @foreach (var tag in analyze.Tags)
+                            {
+                                <InstagramNotification Title=@tag.Name SubTitle=@tag.Confidence.ToString() ImageUrl=@media.ImageUrl WithConfidence="true" />
+                            }
+                        </div>
+                        <div>
+                            <h5>Objects:</h5>
+                            @foreach (var obj in analyze.Objects)
+                            {
+                                <InstagramNotification Title=@obj.ObjectProperty SubTitle=@($"{obj.Confidence} at location {obj.Rectangle.X}, " +
+                                  $"{obj.Rectangle.X + obj.Rectangle.W}, {obj.Rectangle.Y}, {obj.Rectangle.Y + obj.Rectangle.H}") ImageUrl=@media.ImageUrl WithConfidence="true" />
+                            }
+                        </div>
+                        <div>
+                            <h5>Adult:</h5>
+                            <InstagramNotification Title=@($"Has adult content: {analyze.Adult.IsAdultContent}") SubTitle=@analyze.Adult.AdultScore.ToString() ImageUrl=@media.ImageUrl WithConfidence="true" />
+
+                            <InstagramNotification Title=@($"Has adult content: {analyze.Adult.IsRacyContent}") SubTitle=@analyze.Adult.RacyScore.ToString() ImageUrl=@media.ImageUrl WithConfidence="true" />
+                        </div>
+                        <div>
+                            <h5>Faces:</h5>
+                            @foreach (var face in analyze.Faces)
+                            {
+                                <InstagramNotification Title=@($"A {face.Gender.ToString()}") SubTitle=@($"of age {face.Age} at location {face.FaceRectangle.Left}, " +
+                                  $"{face.FaceRectangle.Left}, {face.FaceRectangle.Top + face.FaceRectangle.Width}, " +
+                                  $"{face.FaceRectangle.Top + face.FaceRectangle.Height}") ImageUrl=@media.ImageUrl />
+                            }
+                        </div>
+
+                        <div>
+                            <h5>Brands:</h5>
+                            @foreach (var brand in analyze.Brands)
+                            {
+                                <InstagramNotification Title=@($"Logo of {brand.Name}") SubTitle=@($"{brand.Confidence} at location {brand.Rectangle.X}, " +
+                                  $"{brand.Rectangle.X + brand.Rectangle.W}, {brand.Rectangle.Y}, {brand.Rectangle.Y + brand.Rectangle.H}") ImageUrl=@media.ImageUrl WithConfidence="true" />
+                            }
+                        </div>
+                        <div>
+                            <h5>Celebrities:</h5>
+                            @foreach (var category in analyze.Categories)
+                            {
+                                if (category.Detail?.Celebrities != null)
+                                {
+                                    foreach (var celeb in category.Detail.Celebrities)
+                                    {
+                                        <InstagramNotification Title=@($"{celeb.Name}") SubTitle=@($"{celeb.Confidence} at location {celeb.FaceRectangle.Left}, " +
+                                      $"{celeb.FaceRectangle.Top}, {celeb.FaceRectangle.Height}, {celeb.FaceRectangle.Width}") ImageUrl=@media.ImageUrl WithConfidence="true" />
+                                    }
+                                }
+                            }
+                        </div>
+                        <div>
+                            <h5>Landmarks:</h5>
+                            @foreach (var category in analyze.Categories)
+                            {
+                                if (category.Detail?.Landmarks != null)
+                                {
+                                    foreach (var landmark in category.Detail.Landmarks)
+                                    {
+                                        <InstagramNotification Title=@($"{landmark.Name}") SubTitle=@($"{landmark.Confidence}") ImageUrl=@media.ImageUrl WithConfidence="true" />
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 }
 
 @code {
     private bool isLoading = true;
+    private bool isLoadingAnalyze = true;
     private InstaPost media = null;
+    private ImageAnalysis analyze = null;
 
     protected override async Task OnInitializedAsync()
     {
         media = await localStorageService.GetItemAsync<InstaPost>(Constant.INSTAPOST);
 
         isLoading = false;
+        StateHasChanged();
+
+        analyze = await computerVisionService.AnalyzeImageUrl(media.ImageUrl);
+
+        isLoadingAnalyze = false;
         StateHasChanged();
     }
 }

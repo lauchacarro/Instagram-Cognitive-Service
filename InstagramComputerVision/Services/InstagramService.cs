@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -40,17 +39,23 @@ namespace InstagramComputerVision.Services
 
             var tagFeed = await _instaApi.FeedProcessor.GetTagFeedAsync(tag, PaginationParameters.MaxPagesToLoad(1));
 
-            return tagFeed.Value.Medias.Select(x => new InstaPost
+            if(tagFeed.Value is null)
             {
-                Username = x.User.UserName,
-                Caption = x.Caption?.Text ?? string.Empty,
-                HasLiked = x.HasLiked,
-                LikesCount = x.LikesCount,
-                UserPicture = x.User.ProfilePicture,
-                ImageUrl = x.Images.FirstOrDefault()?.Uri
+                return Enumerable.Empty<InstaPost>();
+            }
+            else
+            {
+                return tagFeed.Value.Medias.Select(x => new InstaPost
+                {
+                    Username = x.User.UserName,
+                    Caption = x.Caption?.Text ?? string.Empty,
+                    HasLiked = x.HasLiked,
+                    LikesCount = x.LikesCount,
+                    UserPicture = x.User.ProfilePicture,
+                    ImageUrl = x.Images.FirstOrDefault()?.Uri
 
-            });
-
+                });
+            }
         }
     }
 }
