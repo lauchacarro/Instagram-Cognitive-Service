@@ -5,7 +5,7 @@
 
 <div class="form-group">
     <label for="exampleInputEmail1">Tag to Search</label>
-    <input type="text" class="form-control" placeholder="Tag" @bind="tag">
+    <input type="text" class="form-control" placeholder="Tag" @bind="tag" @onkeypress=KeyUp>
     <small class="form-text text-muted">
         Analyze the tag posts you enter
     </small>
@@ -51,11 +51,7 @@ else
 
     async Task SearchClick()
     {
-        isLoading = true;
-        StateHasChanged();
-        posts = await instagramService.GetInstaMedias(tag);
-        isLoading = false;
-        StateHasChanged();
+        await Search();
     }
 
     async Task LikedHandle(InstaPost instaPost)
@@ -69,6 +65,23 @@ else
         {
             navigationManager.NavigateTo("Settings");
         }
+    }
+
+    async Task KeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await Search();
+        }
+    }
+
+    async Task Search()
+    {
+        isLoading = true;
+        StateHasChanged();
+        posts = await instagramService.GetInstaMedias(tag);
+        isLoading = false;
+        StateHasChanged();
     }
 }
 
