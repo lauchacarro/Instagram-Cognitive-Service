@@ -1,0 +1,26 @@
+﻿.instagram-notification-scopeId {
+    margin-bottom: 15px;
+    min-height: 40px;
+}
+
+.col-user-scopeId {
+    flex: 0 0 1%;
+}
+
+.col-figure-scopeId {
+    display: inline-block;
+}
+
+.col-user-figure-image-scopeId {
+    border-radius: 99px;
+    width: 32px;
+    height: 32px;
+}
+
+.bold-scopeId {
+    font-weight: bold;
+}
+
+.font-size-scopeId {
+    font-size: 0.9rem;
+}

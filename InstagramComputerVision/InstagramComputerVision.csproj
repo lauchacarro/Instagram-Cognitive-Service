@@ -7,10 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Components\InstagramMenu.razor.css" />
+    <None Remove="Components\InstagramNotification.razor.css" />
     <None Remove="Components\InstagramPost.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Components\InstagramMenu.razor.css" />
+    <EmbeddedResource Include="Components\InstagramNotification.razor.css" />
     <EmbeddedResource Include="Components\InstagramPost.razor.css" />
   </ItemGroup>
 

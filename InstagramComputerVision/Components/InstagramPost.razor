@@ -9,6 +9,8 @@
 {
     <div class=@scopedStyle.CssScopedClasses("instagram-post")>
 
+        <InstagramMenu Show="Show" OnHide="MenuHideHandle"/>
+
         <div class=@($"{scopedStyle.CssScopedClasses("header")} level")>
 
             <div class="level-left">
@@ -19,13 +21,17 @@
 
                 </figure>
 
-                <a href=@($"https://instagram.com/{Media.Username}") target="_blank" class=@scopedStyle.CssScopedClasses("username-link")><span class=@scopedStyle.CssScopedClasses("username", "username-top")>@Media.Username</span></a>
+                <a href=@($"https://instagram.com/{Media.Username}") target="_blank" class=@scopedStyle.CssScopedClasses("username-link")>
+
+                    <span class=@scopedStyle.CssScopedClasses("username", "username-top")>@Media.Username</span>
+
+                </a>
 
             </div>
 
             <div class="level-right">
 
-                <i class=@($"fa fa-ellipsis-v {scopedStyle.CssScopedClasses("pointer")}") aria-hidden="true"></i>
+                <i class=@($"fa fa-ellipsis-v {scopedStyle.CssScopedClasses("pointer")}") @onclick="ShowMenu" aria-hidden="true"></i>
 
             </div>
 
@@ -70,6 +76,8 @@
 
     BlazorScopedCss.ScopedStyle scopedStyle;
 
+    public bool Show { get; set; }
+
     async Task LikeHandle()
     {
         Media.HasLiked = !Media.HasLiked;
@@ -78,5 +86,17 @@
         {
             await OnLiked.InvokeAsync(Media);
         }
+    }
+
+    void ShowMenu()
+    {
+        Show = true;
+        StateHasChanged();
+    }
+
+    void MenuHideHandle()
+    {
+        Show = false;
+        StateHasChanged();
     }
 }
