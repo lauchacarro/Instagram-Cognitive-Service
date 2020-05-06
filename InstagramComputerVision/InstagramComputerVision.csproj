@@ -7,6 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Components\InstagramMenu.razor.css" />
+    <None Remove="Components\InstagramNotification.razor.css" />
+    <None Remove="Components\InstagramPost.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Components\InstagramMenu.razor.css" />
+    <EmbeddedResource Include="Components\InstagramNotification.razor.css" />
+    <EmbeddedResource Include="Components\InstagramPost.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BlazorScopedCss" Version="0.0.15" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
     <PackageReference Include="Blazored.LocalStorage" Version="2.1.5" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="3.1.3" />

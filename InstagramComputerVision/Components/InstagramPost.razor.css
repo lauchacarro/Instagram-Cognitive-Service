@@ -1,0 +1,70 @@
+﻿.instagram-post-scopeId {
+    padding-top: 50px;
+    padding: 5px 0;
+}
+
+.header-scopeId {
+    height: 30px;
+    border-bottom: 1px solid #fff;
+    margin: 7.5px 10px;
+}
+
+
+.header-image-scopeId {
+    display: inline-block;
+}
+
+.header-user-image-scopeId {
+    border-radius: 99px;
+    width: 32px;
+    height: 32px;
+}
+
+.username-link-scopeId {
+    color: black;
+}
+
+.username-scopeId {
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.username-top-scopeId {
+    padding: 5px;
+}
+
+.image-container-scopeId {
+    cursor: pointer;
+    height: 330px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+}
+
+.content-scopeId {
+    margin: 7.5px 10px;
+}
+
+.heart-red-scopeId {
+    color: #f06595;
+}
+
+.likes-scopeId {
+    margin: 5px 0;
+    margin-bottom: 5px !important;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.caption-scopeId {
+    font-size: 0.85rem;
+}
+
+.caption-span-scopeId {
+    font-weight: bold;
+}
+
+
+.pointer-scopeId {
+    cursor: pointer;
+}

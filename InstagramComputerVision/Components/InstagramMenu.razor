@@ -1,0 +1,39 @@
+﻿@if (Show)
+{
+    <BlazorScopedCss.ScopedStyle EmbeddedStylePath="InstagramMenu.razor.css"
+                                 Parent="this"
+                                 AfterInit="StateHasChanged"
+                                 @ref="scopedStyle" />
+
+    @if (scopedStyle?.IsComplete ?? false)
+    {
+        <div class=@scopedStyle.CssScopedClasses("background") @onclick="BackgroundClick"></div>
+        <div class=@scopedStyle.CssScopedClasses("menu")>
+            <p class=@scopedStyle.CssScopedClasses("option")>Analyze Image</p>
+            <p class=@scopedStyle.CssScopedClasses("option")>Detect Objects</p>
+            <p class=@scopedStyle.CssScopedClasses("option")>Optical Character Recognition</p>
+            <p class=@scopedStyle.CssScopedClasses("option")>Read the batch text</p>
+            <p class=@scopedStyle.CssScopedClasses("option")>Generate Thumbnail</p>
+            <p class=@scopedStyle.CssScopedClasses("option")>Detect Domain Specific</p>
+        </div>
+    }
+}
+
+
+@code {
+    [Parameter]
+    public bool Show { get; set; }
+
+    [Parameter]
+    public EventCallback OnShow { get; set; }
+
+    [Parameter]
+    public EventCallback OnHide { get; set; }
+
+    BlazorScopedCss.ScopedStyle scopedStyle;
+
+    async Task BackgroundClick()
+    {
+        await OnHide.InvokeAsync(null);
+    }
+}

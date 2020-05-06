@@ -5,7 +5,7 @@
 
 <div class="form-group">
     <label for="exampleInputEmail1">Tag to Search</label>
-    <input type="text" class="form-control" placeholder="Tag" @bind="tag" @onkeypress=KeyUp>
+    <input type="text" class="form-control" placeholder="Tag" @bind="key" @onkeypress=KeyUp>
     <small class="form-text text-muted">
         Analyze the tag posts you enter
     </small>
@@ -26,7 +26,7 @@ else
             {
                 @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
                 {
-                    <div class="col-sm-3">
+                    <div class="col-xs-12 col-md-3">
                         <InstagramPost Media=@item OnLiked=LikedHandle />
                     </div>
                 }
@@ -39,12 +39,12 @@ else
 
 @code{
     private bool isLoading = true;
-    private string tag = "blazor";
+    private string key = "blazor";
     private IEnumerable<InstaPost> posts = Enumerable.Empty<InstaPost>();
 
     protected override async Task OnInitializedAsync()
     {
-        posts = await instagramService.GetInstaMedias(tag);
+        posts = await instagramService.GetInstaPosts(key);
         isLoading = false;
         StateHasChanged();
     }
@@ -79,7 +79,7 @@ else
     {
         isLoading = true;
         StateHasChanged();
-        posts = await instagramService.GetInstaMedias(tag);
+        posts = await instagramService.GetInstaPosts(key);
         isLoading = false;
         StateHasChanged();
     }

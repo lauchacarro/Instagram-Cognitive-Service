@@ -1,0 +1,20 @@
+﻿.menu-scopeId {
+    position: absolute;
+    width: 15vw;
+    height: 15vw;
+    left: calc(50% - 15vw / 2);
+    top: calc(50% - 15vw / 2);
+    background-color: white;
+    padding: 20px;
+}
+
+.background-scopeId {
+    position: absolute;
+    width: calc(100% - 30px);
+    height: 100%;
+    background-color: #00000056;
+}
+
+.option-scopeId {
+    cursor: pointer;
+}
