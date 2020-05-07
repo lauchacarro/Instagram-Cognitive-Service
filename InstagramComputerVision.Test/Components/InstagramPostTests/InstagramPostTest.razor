@@ -1,0 +1,58 @@
+﻿@inherits TestComponentBase
+
+<Fixture Setup="Setup" Tests="new Action[] {MarkupPassedCssClass }">
+
+    <ComponentUnderTest>
+        <InstagramPost Media="new Models.InstaPost()"/>
+    </ComponentUnderTest>
+
+    <Fragment Id="css-class-test">
+        <div class="instagram-post-InstagramComputerVision-Components-InstagramPost">
+            <div class="header-InstagramComputerVision-Components-InstagramPost level">
+                <div class="level-left">
+                    <figure class="header-image-InstagramComputerVision-Components-InstagramPost zero-margin">
+                        <img class="header-user-image-InstagramComputerVision-Components-InstagramPost" />
+                    </figure>
+                    <a href:ignore="" target:ignore="_blank" class="username-link-InstagramComputerVision-Components-InstagramPost">
+                        <span class="username-InstagramComputerVision-Components-InstagramPost username-top-InstagramComputerVision-Components-InstagramPost"></span>
+                    </a>
+                </div>
+                <div class="level-right">
+                    <i class="fa fa-ellipsis-v pointer-InstagramComputerVision-Components-InstagramPost" aria-hidden="true"></i>
+                </div>
+            </div>
+            <div class="image-container-InstagramComputerVision-Components-InstagramPost"
+                 style="background-image: url('.')"
+            </div>
+            <div class="content-InstagramComputerVision-Components-InstagramPost">
+                <div class="pointer-InstagramComputerVision-Components-InstagramPost">
+                    <i class="far fa-heart fa-lg">
+                    </i>
+                </div>
+                <p class="likes-InstagramComputerVision-Components-InstagramPost">0 likes</p>
+                <p class="caption-InstagramComputerVision-Components-InstagramPost">
+                    <a href="https://instagram.com/" target="_blank" class="username-link-InstagramComputerVision-Components-InstagramPost">
+                        <span class="username-InstagramComputerVision-Components-InstagramPost"></span>
+                    </a>
+                </p>
+            </div>
+        </div>
+    </Fragment>
+</Fixture>
+
+@code {
+    protected void Setup()
+    {
+        Services.AddMockJsRuntime();
+        Services.AddBlazorScopedCss(typeof(InstagramPost).Assembly);
+    }
+
+    protected void MarkupPassedCssClass()
+    {
+        var cut = GetComponentUnderTest<InstagramPost>();
+
+        IRenderedFragment fragment = GetFragment("css-class-test");
+
+        cut.MarkupMatches(fragment);
+    }
+}

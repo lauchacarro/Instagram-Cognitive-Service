@@ -8,8 +8,10 @@
 @if (scopedStyle?.IsComplete ?? false)
 {
     <div class=@scopedStyle.CssScopedClasses("instagram-post")>
-
-        <InstagramMenu Show="Show" OnHide="MenuHideHandle"/>
+        @if (Show)
+        {
+            <InstagramMenu OnHide="MenuHideHandle" />
+        }
 
         <div class=@($"{scopedStyle.CssScopedClasses("header")} level")>
 

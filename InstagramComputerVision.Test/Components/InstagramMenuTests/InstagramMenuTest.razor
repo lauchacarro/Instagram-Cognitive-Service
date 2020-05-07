@@ -1,0 +1,102 @@
+﻿@inherits TestComponentBase
+
+<Fixture Tests="new Action[]{ MarkupPassedBackground, MarkupPassedMenu, MarkupPassedOptions }" Setup="Setup">
+
+    <ComponentUnderTest>
+        <InstagramMenu />
+    </ComponentUnderTest>
+
+    <Fragment id="background">
+        <div class="background-InstagramComputerVision-Components-InstagramMenu"></div>
+    </Fragment>
+
+    <Fragment id="menu">
+        <div class="menu-InstagramComputerVision-Components-InstagramMenu">
+            <p class="option-InstagramComputerVision-Components-InstagramMenu">Analyze Image</p>
+            <p class="option-InstagramComputerVision-Components-InstagramMenu">Detect Objects</p>
+            <p class="option-InstagramComputerVision-Components-InstagramMenu">Optical Character Recognition</p>
+            <p class="option-InstagramComputerVision-Components-InstagramMenu">Read the batch text</p>
+            <p class="option-InstagramComputerVision-Components-InstagramMenu">Generate Thumbnail</p>
+            <p class="option-InstagramComputerVision-Components-InstagramMenu">Detect Domain Specific</p>
+        </div>
+    </Fragment>
+
+    <Fragment id="option1">
+        <p class="option-InstagramComputerVision-Components-InstagramMenu">Analyze Image</p>
+    </Fragment>
+
+    <Fragment id="option2">
+        <p class="option-InstagramComputerVision-Components-InstagramMenu">Detect Objects</p>
+    </Fragment>
+
+    <Fragment id="option3">
+        <p class="option-InstagramComputerVision-Components-InstagramMenu">Optical Character Recognition</p>
+    </Fragment>
+
+    <Fragment id="option4">
+        <p class="option-InstagramComputerVision-Components-InstagramMenu">Read the batch text</p>
+    </Fragment>
+
+    <Fragment id="option5">
+        <p class="option-InstagramComputerVision-Components-InstagramMenu">Generate Thumbnail</p>
+    </Fragment>
+
+    <Fragment id="option6">
+        <p class="option-InstagramComputerVision-Components-InstagramMenu">Detect Domain Specific</p>
+    </Fragment>
+
+</Fixture>
+
+
+@code {
+
+    void Setup()
+    {
+        Services.AddMockJsRuntime();
+        Services.AddBlazorScopedCss(typeof(InstagramMenu).Assembly);
+    }
+
+    void MarkupPassedBackground()
+    {
+        IRenderedComponent<InstagramMenu> cut = GetComponentUnderTest<InstagramMenu>();
+
+        IRenderedFragment fragment = GetFragment("background");
+
+        var element = cut.Find("div.background-InstagramComputerVision-Components-InstagramMenu");
+
+        element.MarkupMatches(fragment);
+    }
+
+    void MarkupPassedMenu()
+    {
+        IRenderedComponent<InstagramMenu> cut = GetComponentUnderTest<InstagramMenu>();
+
+        IRenderedFragment fragment = GetFragment("menu");
+
+        var element = cut.Find("div.menu-InstagramComputerVision-Components-InstagramMenu");
+
+        element.MarkupMatches(fragment);
+    }
+
+    void MarkupPassedOptions()
+    {
+        IRenderedComponent<InstagramMenu> cut = GetComponentUnderTest<InstagramMenu>();
+
+        var element = cut.FindAll("div.menu-InstagramComputerVision-Components-InstagramMenu p.menu-InstagramComputerVision-Components-InstagramMenu");
+
+        for (int i = 0; i < element.Count; i++)
+        {
+            IRenderedFragment fragment = GetFragment($"option{i + 1}");
+            element[i].MarkupMatches(fragment);
+        }
+    }
+
+    void BackGroundClickInvokeCallback()
+    {
+        IRenderedComponent<InstagramMenu> cut = RenderComponent<InstagramMenu>(EventCallback(nameof(InstagramMenu.OnHide), (EventArgs args) => { }));
+
+        var element = cut.Find("div.background-InstagramComputerVision-Components-InstagramMenu");
+
+        element.Click();
+    }
+}

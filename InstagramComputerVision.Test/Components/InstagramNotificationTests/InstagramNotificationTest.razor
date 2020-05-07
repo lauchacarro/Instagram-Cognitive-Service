@@ -1,0 +1,102 @@
+﻿@inherits TestComponentBase
+
+<Fixture Setup="Setup" Tests="new Action[]{ MarkupPassedCssClass, MarkupPassedWithConfidence, MarkupPassedTitle, MarkupPassedImageUrl }">
+    <ComponentUnderTest>
+        <InstagramNotification />
+    </ComponentUnderTest>
+
+    <Fragment Id="css-class-test">
+        <div class="row instagram-notification-InstagramComputerVision-Components-InstagramNotification">
+            <div class="col-1 col-user-InstagramComputerVision-Components-InstagramNotification">
+                <figure class="image is-32x32 zero-margin col-figure-InstagramComputerVision-Components-InstagramNotification">
+                    <img class="col-user-figure-image-InstagramComputerVision-Components-InstagramNotification" src="https://i.postimg.cc/xTRmVt0V/computer-vision.png" />
+                </figure>
+            </div>
+            <div class="col-3">
+                <span class="font-size-InstagramComputerVision-Components-InstagramNotification bold-InstagramComputerVision-Components-InstagramNotification"> </span>
+                <span class="font-size-InstagramComputerVision-Components-InstagramNotification" style:ignore=""></span>
+            </div>
+            <div class="col-1">
+                <figure class="image is-32x32 zero-margin col-figure-InstagramComputerVision-Components-InstagramNotification">
+                    <img diff:ignore />
+                </figure>
+            </div>
+        </div>
+    </Fragment>
+
+    <Fragment Id="with-confidence">
+        <div id="with-confidence">
+            <span class="font-size-InstagramComputerVision-Components-InstagramNotification">with </span>
+            <span class="font-size-InstagramComputerVision-Components-InstagramNotification confidence-InstagramComputerVision-Components-InstagramNotification">#confidence </span>
+        </div>
+    </Fragment>
+
+    <Fragment Id="title-subtitle">
+        <div class="col-3">
+            <span class="font-size-InstagramComputerVision-Components-InstagramNotification bold-InstagramComputerVision-Components-InstagramNotification">My Title </span>
+            <span class="font-size-InstagramComputerVision-Components-InstagramNotification" style="color: #My SubTitle">My SubTitle</span>
+        </div>
+    </Fragment>
+
+    <Fragment Id="image-url">
+        <div class="col-1">
+            <figure class="image is-32x32 zero-margin col-figure-InstagramComputerVision-Components-InstagramNotification">
+                <img src="https://image.com" />
+            </figure>
+        </div>
+    </Fragment>
+</Fixture>
+
+@code {
+    protected void Setup()
+    {
+        Services.AddMockJsRuntime();
+        Services.AddBlazorScopedCss(typeof(InstagramNotification).Assembly);
+    }
+
+    protected void MarkupPassedCssClass()
+    {
+        var cut = RenderComponent<InstagramNotification>();
+
+        IRenderedFragment fragment = GetFragment("css-class-test");
+
+        cut.MarkupMatches(fragment);
+    }
+
+    protected void MarkupPassedWithConfidence()
+    {
+        var cut = RenderComponent<InstagramNotification>(
+            (nameof(InstagramNotification.WithConfidence), true));
+
+        IRenderedFragment fragment = GetFragment("with-confidence");
+
+        var element = cut.Find("#with-confidence");
+
+        element.MarkupMatches(fragment);
+    }
+
+    protected void MarkupPassedTitle()
+    {
+        var cut = RenderComponent<InstagramNotification>(
+            (nameof(InstagramNotification.Title), "My Title"),
+            (nameof(InstagramNotification.SubTitle), "My SubTitle"));
+
+        IRenderedFragment fragment = GetFragment("title-subtitle");
+
+        var element = cut.Find(".col-3");
+
+        element.MarkupMatches(fragment);
+    }
+
+    protected void MarkupPassedImageUrl()
+    {
+        var cut = RenderComponent<InstagramNotification>(
+            (nameof(InstagramNotification.ImageUrl), "https://image.com"));
+
+        IRenderedFragment fragment = GetFragment("image-url");
+
+        var element = cut.Find(".col-1:last-child");
+
+        element.MarkupMatches(fragment);
+    }
+}

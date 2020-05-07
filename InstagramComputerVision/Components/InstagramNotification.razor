@@ -5,11 +5,11 @@
 
 @if (scopedStyle?.IsComplete ?? false)
 {
-    <div class=@($"row {scopedStyle.CssScopedClasses("instagram-notification")}")>
+    <div class=@scopedStyle.CssClassesMixed("row", "instagram-notification")>
 
-        <div class=@($"col-1 {scopedStyle.CssScopedClasses("col-user")}")>
+        <div class=@scopedStyle.CssClassesMixed("col-1", "col-user")>
 
-            <figure class=@($"image is-32x32 zero-margin {scopedStyle.CssScopedClasses("col-figure")}")>
+            <figure class=@scopedStyle.CssClassesMixed("image is-32x32 zero-margin", "col-figure")>
 
                 <img class=@scopedStyle.CssScopedClasses("col-user-figure-image") src="https://i.postimg.cc/xTRmVt0V/computer-vision.png" />
 
@@ -22,9 +22,11 @@
 
             @if (WithConfidence)
             {
-                <span class=@scopedStyle.CssScopedClasses("font-size")>with </span>
+                <div id="with-confidence">
+                    <span class=@scopedStyle.CssScopedClasses("font-size")>with </span>
 
-                <span class=@scopedStyle.CssScopedClasses("font-size") style="color:#0065B3;">#confidence </span>
+                    <span class=@scopedStyle.CssScopedClasses("font-size", "confidence")>#confidence </span>
+                </div>
             }
 
             <span class=@scopedStyle.CssScopedClasses("font-size") style="color: #@SubTitle">@SubTitle</span>
@@ -33,7 +35,7 @@
 
         <div class="col-1">
 
-            <figure class=@($"image is-32x32 zero-margin {scopedStyle.CssScopedClasses("col-figure")}")>
+            <figure class=@scopedStyle.CssClassesMixed("image is-32x32 zero-margin", "col-figure")>
 
                 <img src=@ImageUrl />
 
@@ -54,9 +56,6 @@
     public string ImageUrl { get; set; }
     [Parameter]
     public bool WithConfidence { get; set; }
-
-    [Parameter]
-    public bool Color { get; set; }
 
     BlazorScopedCss.ScopedStyle scopedStyle;
 
