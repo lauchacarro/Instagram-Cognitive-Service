@@ -5,14 +5,14 @@ on:
     - master      # Eventos de Push sobre el branch 'master'
 jobs:
   build:
-    name: Build
+    name: Test
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
     - uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.1.201' # Versión del SDK.
-    - run: dotnet build --configuration Release
+    - run: dotnet test
   deployHeroku:
     name: Deploy Heroku
     needs: build
