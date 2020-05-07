@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30001.183
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstagramComputerVision", "InstagramComputerVision\InstagramComputerVision.csproj", "{2BF5FE76-16D1-452E-A2FA-0C7CBD199126}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstagramComputerVision.Test", "InstagramComputerVision.Test\InstagramComputerVision.Test.csproj", "{74FAFCC5-AD43-4EB4-B2FB-EB70D95E54E4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{2BF5FE76-16D1-452E-A2FA-0C7CBD199126}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2BF5FE76-16D1-452E-A2FA-0C7CBD199126}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2BF5FE76-16D1-452E-A2FA-0C7CBD199126}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74FAFCC5-AD43-4EB4-B2FB-EB70D95E54E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74FAFCC5-AD43-4EB4-B2FB-EB70D95E54E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74FAFCC5-AD43-4EB4-B2FB-EB70D95E54E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74FAFCC5-AD43-4EB4-B2FB-EB70D95E54E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

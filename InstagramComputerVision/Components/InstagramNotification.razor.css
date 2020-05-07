@@ -24,3 +24,7 @@
 .font-size-scopeId {
     font-size: 0.9rem;
 }
+
+.confidence-scopeId {
+    color: #0065B3;
+}

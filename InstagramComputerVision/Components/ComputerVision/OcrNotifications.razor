@@ -1,0 +1,33 @@
+﻿@using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models
+
+<div class="container" style="overflow-y: scroll; height:600px;">
+    <div>
+        <h5>Text:</h5>
+        <InstagramNotification Title="Language:" SubTitle=@(OcrResult.Language) ImageUrl=@Media.ImageUrl />
+        <InstagramNotification Title="Text Angle:" SubTitle=@(OcrResult.TextAngle.ToString()) ImageUrl=@Media.ImageUrl />
+        <InstagramNotification Title="Orientation:" SubTitle=@(OcrResult.Orientation) ImageUrl=@Media.ImageUrl />
+    </div>
+    <div>
+        @foreach (var region in OcrResult.Regions)
+        {
+            <InstagramNotification Title="Region bounding box:" SubTitle=@(region.BoundingBox) ImageUrl=@Media.ImageUrl />
+
+            foreach (var line in region.Lines)
+            {
+                <h5>Line bounding box: @(line.BoundingBox)</h5>
+
+                foreach (var word in line.Words)
+                {
+                    <InstagramNotification Title=@( $"{word.Text}") SubTitle=@($" Word bounding box: {word.BoundingBox}") ImageUrl=@Media.ImageUrl />
+                }
+            }
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public InstaPost Media { get; set; }
+    [Parameter]
+    public OcrResult OcrResult { get; set; }
+}

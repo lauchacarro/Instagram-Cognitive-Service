@@ -8,8 +8,10 @@
 @if (scopedStyle?.IsComplete ?? false)
 {
     <div class=@scopedStyle.CssScopedClasses("instagram-post")>
-
-        <InstagramMenu Show="Show" OnHide="MenuHideHandle"/>
+        @if (Show)
+        {
+            <InstagramMenu OnHide="MenuHideHandle" OnOptionSelected="OptionClick"/>
+        }
 
         <div class=@($"{scopedStyle.CssScopedClasses("header")} level")>
 
@@ -74,6 +76,9 @@
     [Parameter]
     public EventCallback<InstaPost> OnLiked { get; set; }
 
+    [Parameter]
+    public EventCallback<(InstaPost, ComputerVisionOption)> OnOptionSelected { get; set; }
+
     BlazorScopedCss.ScopedStyle scopedStyle;
 
     public bool Show { get; set; }
@@ -98,5 +103,14 @@
     {
         Show = false;
         StateHasChanged();
+    }
+
+    async Task OptionClick(ComputerVisionOption option)
+    {
+        Show = false;
+        StateHasChanged();
+
+        if (OnOptionSelected.HasDelegate)
+            await OnOptionSelected.InvokeAsync((Media, option));
     }
 }

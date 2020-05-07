@@ -1,0 +1,109 @@
+﻿@using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models
+
+<div class="container" style="overflow-y: scroll; height:600px;">
+    <div>
+        <h5>Image Type:</h5>
+        <InstagramNotification Title="Line Drawing Type:" SubTitle=@(Analysis.ImageType.ClipArtType.ToString()) ImageUrl=@Media.ImageUrl />
+        <InstagramNotification Title="Clip Art Type:" SubTitle=@(Analysis.ImageType.LineDrawingType.ToString()) ImageUrl=@Media.ImageUrl />
+    </div>
+
+    <div>
+        <h5>Color Scheme:</h5>
+        <InstagramNotification Title="Is black and white?:" SubTitle=@(Analysis.Color.IsBWImg.ToString()) ImageUrl=@Media.ImageUrl />
+
+        <InstagramNotification Title="Accent color:" SubTitle=@(Analysis.Color.AccentColor) ImageUrl=@Media.ImageUrl />
+
+        <InstagramNotification Title="Dominant background color:" SubTitle=@(Analysis.Color.DominantColorBackground) ImageUrl=@Media.ImageUrl />
+
+        <InstagramNotification Title="Dominant foreground color:" SubTitle=@(Analysis.Color.DominantColorForeground) ImageUrl=@Media.ImageUrl />
+
+        <InstagramNotification Title="Dominant colors:" SubTitle=@(string.Join(",", Analysis.Color.DominantColors)) ImageUrl=@Media.ImageUrl />
+    </div>
+    <div>
+        <h5>Summary:</h5>
+        @foreach (var caption in Analysis.Description.Captions)
+        {
+            <InstagramNotification Title=@caption.Text SubTitle=@caption.Confidence.ToString() ImageUrl=@Media.ImageUrl WithConfidence="true" />
+        }
+    </div>
+    <div>
+        <h5>Categories:</h5>
+        @foreach (var category in Analysis.Categories)
+        {
+            <InstagramNotification Title=@category.Name SubTitle=@category.Score.ToString() ImageUrl=@Media.ImageUrl WithConfidence="true" />
+        }
+    </div>
+    <div>
+        <h5>Tags:</h5>
+        @foreach (var tag in Analysis.Tags)
+        {
+            <InstagramNotification Title=@tag.Name SubTitle=@tag.Confidence.ToString() ImageUrl=@Media.ImageUrl WithConfidence="true" />
+        }
+    </div>
+    <div>
+        <h5>Objects:</h5>
+        @foreach (var obj in Analysis.Objects)
+        {
+            <InstagramNotification Title=@obj.ObjectProperty SubTitle=@($"{obj.Confidence} at location {obj.Rectangle.X}, " +
+                                  $"{obj.Rectangle.X + obj.Rectangle.W}, {obj.Rectangle.Y}, {obj.Rectangle.Y + obj.Rectangle.H}") ImageUrl=@Media.ImageUrl WithConfidence="true" />
+        }
+    </div>
+    <div>
+        <h5>Adult:</h5>
+        <InstagramNotification Title=@($"Has adult content: {Analysis.Adult.IsAdultContent}") SubTitle=@Analysis.Adult.AdultScore.ToString() ImageUrl=@Media.ImageUrl WithConfidence="true" />
+
+        <InstagramNotification Title=@($"Has racy content: {Analysis.Adult.IsRacyContent}") SubTitle=@Analysis.Adult.RacyScore.ToString() ImageUrl=@Media.ImageUrl WithConfidence="true" />
+    </div>
+    <div>
+        <h5>Faces:</h5>
+        @foreach (var face in Analysis.Faces)
+        {
+            <InstagramNotification Title=@($"A {face.Gender.ToString()}") SubTitle=@($"of age {face.Age} at location {face.FaceRectangle.Left}, " +
+                                  $"{face.FaceRectangle.Left}, {face.FaceRectangle.Top + face.FaceRectangle.Width}, " +
+                                  $"{face.FaceRectangle.Top + face.FaceRectangle.Height}") ImageUrl=@Media.ImageUrl />
+        }
+    </div>
+
+    <div>
+        <h5>Brands:</h5>
+        @foreach (var brand in Analysis.Brands)
+        {
+            <InstagramNotification Title=@($"Logo of {brand.Name}") SubTitle=@($"{brand.Confidence} at location {brand.Rectangle.X}, " +
+                                  $"{brand.Rectangle.X + brand.Rectangle.W}, {brand.Rectangle.Y}, {brand.Rectangle.Y + brand.Rectangle.H}") ImageUrl=@Media.ImageUrl WithConfidence="true" />
+        }
+    </div>
+    <div>
+        <h5>Celebrities:</h5>
+        @foreach (var category in Analysis.Categories)
+        {
+            if (category.Detail?.Celebrities != null)
+            {
+                foreach (var celeb in category.Detail.Celebrities)
+                {
+                    <InstagramNotification Title=@($"{celeb.Name}") SubTitle=@($"{celeb.Confidence} at location {celeb.FaceRectangle.Left}, " +
+                                      $"{celeb.FaceRectangle.Top}, {celeb.FaceRectangle.Height}, {celeb.FaceRectangle.Width}") ImageUrl=@Media.ImageUrl WithConfidence="true" />
+                }
+            }
+        }
+    </div>
+    <div>
+        <h5>Landmarks:</h5>
+        @foreach (var category in Analysis.Categories)
+        {
+            if (category.Detail?.Landmarks != null)
+            {
+                foreach (var landmark in category.Detail.Landmarks)
+                {
+                    <InstagramNotification Title=@($"{landmark.Name}") SubTitle=@($"{landmark.Confidence}") ImageUrl=@Media.ImageUrl WithConfidence="true" />
+                }
+            }
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public InstaPost Media { get; set; }
+    [Parameter]
+    public ImageAnalysis Analysis { get; set; }
+}

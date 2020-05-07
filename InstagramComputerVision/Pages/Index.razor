@@ -27,7 +27,7 @@ else
                 @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
                 {
                     <div class="col-xs-12 col-md-3">
-                        <InstagramPost Media=@item OnLiked=LikedHandle />
+                        <InstagramPost Media=@item OnLiked=LikedHandle OnOptionSelected="OptionSelectedHandle"/>
                     </div>
                 }
             }
@@ -59,7 +59,20 @@ else
         if (await localStorageService.ContainKeyAsync(Constant.COMPUTERVISIONKEY))
         {
             await localStorageService.SetItemAsync(Constant.INSTAPOST, instaPost);
-            navigationManager.NavigateTo("Analyze");
+            navigationManager.NavigateTo("ComputerVision");
+        }
+        else
+        {
+            navigationManager.NavigateTo("Settings");
+        }
+    }
+
+    async Task OptionSelectedHandle((InstaPost, ComputerVisionOption) option)
+    {
+        if (await localStorageService.ContainKeyAsync(Constant.COMPUTERVISIONKEY))
+        {
+            await localStorageService.SetItemAsync(Constant.INSTAPOST, option.Item1);
+            navigationManager.NavigateTo($"ComputerVision/{option.Item2.ToString()}");
         }
         else
         {
