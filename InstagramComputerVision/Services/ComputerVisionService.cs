@@ -34,5 +34,17 @@ namespace InstagramComputerVision.Services
             ImageAnalysis results = await client.AnalyzeImageAsync(imageUrl, features, details);
             return results;
         }
+
+        public async Task<OcrResult> OcrUrl(string imageUrl)
+        {
+            string computerVisionKey = await _localStorageService.GetItemAsync<string>(Constant.COMPUTERVISIONKEY);
+            string computerVisionEndpoint = await _localStorageService.GetItemAsync<string>(Constant.COMPUTERVISIONENDPOINT);
+
+            ComputerVisionClient client = new ComputerVisionClient(new ApiKeyServiceClientCredentials(computerVisionKey))
+            { Endpoint = computerVisionEndpoint };
+
+            OcrResult remoteOcrResult = await client.RecognizePrintedTextAsync(true, imageUrl);
+            return remoteOcrResult;
+        }
     }
 }

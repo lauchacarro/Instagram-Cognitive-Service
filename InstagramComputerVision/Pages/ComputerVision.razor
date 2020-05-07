@@ -1,0 +1,112 @@
+﻿@page "/computervision"
+@page "/computervision/{Option}"
+@using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models
+@using InstagramComputerVision.Components.ComputerVision
+
+@inject ILocalStorageService localStorageService
+@inject NavigationManager navigationManager
+@inject ComputerVisionService computerVisionService
+
+@if (isLoading)
+{
+    <Loader></Loader>
+}
+else
+{
+    <div class="container-inner">
+        <div class="row">
+            <div class="col-sm-3">
+                <InstagramPost Media="media" OnOptionSelected="OptionSelectedHandle" />
+            </div>
+            <div class="col-sm-9">
+                @if (isLoadingAnalyze)
+                {
+                    <Loader></Loader>
+                }
+                else
+                {
+                    switch (optionEnum)
+                    {
+                        case ComputerVisionOption.AnalyzeImage:
+                            <ImageAnalysisNotifications Media="media" Analysis="analysis" />
+                            break;
+                        case ComputerVisionOption.OpticalCharacterRecognition:
+                            <OcrNotifications Media="media" OcrResult="ocrResult" />
+                            break;
+                        default:
+                            <ImageAnalysisNotifications Media="media" Analysis="analysis" />
+                            break;
+                    }
+
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public string Option { get; set; }
+    public ComputerVisionOption optionEnum = ComputerVisionOption.AnalyzeImage;
+
+    private bool isLoading = true;
+    private bool isLoadingAnalyze = true;
+    private InstaPost media = null;
+    private ImageAnalysis analysis = null;
+    private OcrResult ocrResult = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Option = string.IsNullOrWhiteSpace(Option) ? ComputerVisionOption.AnalyzeImage.ToString() : Option;
+
+        optionEnum = (ComputerVisionOption)Enum.Parse(typeof(ComputerVisionOption), Option);
+        media = await localStorageService.GetItemAsync<InstaPost>(Constant.INSTAPOST);
+
+        isLoading = false;
+        StateHasChanged();
+
+        await RunComputerVision();
+
+        isLoadingAnalyze = false;
+        StateHasChanged();
+    }
+
+    async Task OptionSelectedHandle((InstaPost, ComputerVisionOption) option)
+    {
+        navigationManager.NavigateTo($"ComputerVision/{option.Item2.ToString()}");
+
+        isLoadingAnalyze = true;
+        StateHasChanged();
+
+        optionEnum = option.Item2;
+        await RunComputerVision();
+
+        isLoadingAnalyze = false;
+        StateHasChanged();
+    }
+
+    private async Task RunComputerVision()
+    {
+        switch (optionEnum)
+        {
+            case ComputerVisionOption.AnalyzeImage:
+                analysis = await computerVisionService.AnalyzeImageUrl(media.ImageUrl);
+                break;
+            case ComputerVisionOption.DetectObjects:
+                break;
+            case ComputerVisionOption.OpticalCharacterRecognition:
+                ocrResult = await computerVisionService.OcrUrl(media.ImageUrl);
+                break;
+            case ComputerVisionOption.ReadTheBatchText:
+                break;
+            case ComputerVisionOption.GenerateThumbnail:
+                break;
+            case ComputerVisionOption.DetectDomainSpecific:
+                break;
+            default:
+                analysis = await computerVisionService.AnalyzeImageUrl(media.ImageUrl);
+                break;
+        }
+    }
+}

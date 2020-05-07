@@ -8,12 +8,12 @@
 {
     <div class=@scopedStyle.CssScopedClasses("background") @onclick="BackgroundClick"></div>
     <div class=@scopedStyle.CssScopedClasses("menu")>
-        <p class=@scopedStyle.CssScopedClasses("option")>Analyze Image</p>
-        <p class=@scopedStyle.CssScopedClasses("option")>Detect Objects</p>
-        <p class=@scopedStyle.CssScopedClasses("option")>Optical Character Recognition</p>
-        <p class=@scopedStyle.CssScopedClasses("option")>Read the batch text</p>
-        <p class=@scopedStyle.CssScopedClasses("option")>Generate Thumbnail</p>
-        <p class=@scopedStyle.CssScopedClasses("option")>Detect Domain Specific</p>
+        <p class=@scopedStyle.CssScopedClasses("option") @onclick="() => OptionClick(ComputerVisionOption.AnalyzeImage)">Analyze Image</p>
+        <p class=@scopedStyle.CssScopedClasses("option") @onclick="() => OptionClick(ComputerVisionOption.DetectObjects)">Detect Objects</p>
+        <p class=@scopedStyle.CssScopedClasses("option") @onclick="() => OptionClick(ComputerVisionOption.OpticalCharacterRecognition)">Optical Character Recognition</p>
+        <p class=@scopedStyle.CssScopedClasses("option") @onclick="() => OptionClick(ComputerVisionOption.ReadTheBatchText)">Read The Batch Text</p>
+        <p class=@scopedStyle.CssScopedClasses("option") @onclick="() => OptionClick(ComputerVisionOption.GenerateThumbnail)">Generate Thumbnail</p>
+        <p class=@scopedStyle.CssScopedClasses("option") @onclick="() => OptionClick(ComputerVisionOption.DetectDomainSpecific)">Detect Domain Specific</p>
     </div>
 }
 
@@ -23,11 +23,20 @@
     [Parameter]
     public EventCallback OnHide { get; set; }
 
+    [Parameter]
+    public EventCallback<ComputerVisionOption> OnOptionSelected { get; set; }
+
     BlazorScopedCss.ScopedStyle scopedStyle;
 
     async Task BackgroundClick()
     {
         if (OnHide.HasDelegate)
             await OnHide.InvokeAsync(null);
+    }
+
+    async Task OptionClick(ComputerVisionOption option)
+    {
+        if (OnOptionSelected.HasDelegate)
+            await OnOptionSelected.InvokeAsync(option);
     }
 }
