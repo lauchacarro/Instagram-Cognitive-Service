@@ -15,7 +15,7 @@ using Microsoft.Extensions.Options;
 
 namespace InstagramComputerVision.Services
 {
-    public class InstagramService
+    public class InstagramService : IInstagramService
     {
         private readonly IInstaApi _instaApi;
         public InstagramService(IOptions<InstagramOptions> options)

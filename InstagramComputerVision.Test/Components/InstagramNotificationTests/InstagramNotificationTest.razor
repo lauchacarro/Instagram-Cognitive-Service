@@ -90,13 +90,16 @@
 
     protected void MarkupPassedImageUrl()
     {
+
+
         var cut = RenderComponent<InstagramNotification>(
-            (nameof(InstagramNotification.ImageUrl), "https://image.com"));
+        (nameof(InstagramNotification.Image), "https://image.com"));
 
         IRenderedFragment fragment = GetFragment("image-url");
 
         var element = cut.Find(".col-1:last-child");
 
         element.MarkupMatches(fragment);
+
     }
 }

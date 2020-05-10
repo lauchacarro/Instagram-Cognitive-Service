@@ -29,8 +29,8 @@ namespace InstagramComputerVision
             services.AddServerSideBlazor();
             services.AddBlazorScopedCss(Assembly.GetExecutingAssembly());
             services.AddBlazoredLocalStorage();
-            services.AddSingleton<InstagramService>();
-            services.AddTransient<ComputerVisionService>();
+            services.AddSingleton<IInstagramService, InstagramService>();
+            services.AddTransient<IComputerVisionService, ComputerVisionService>();
 
             services.Configure<InstagramOptions>(Configuration.GetSection(nameof(InstagramOptions)));
         }

@@ -3,14 +3,14 @@
 <div class="container" style="overflow-y: scroll; height:600px;">
     <div>
         <h5>Text:</h5>
-        <InstagramNotification Title="Language:" SubTitle=@(OcrResult.Language) ImageUrl=@Media.ImageUrl />
-        <InstagramNotification Title="Text Angle:" SubTitle=@(OcrResult.TextAngle.ToString()) ImageUrl=@Media.ImageUrl />
-        <InstagramNotification Title="Orientation:" SubTitle=@(OcrResult.Orientation) ImageUrl=@Media.ImageUrl />
+        <InstagramNotification Title="Language:" SubTitle=@(OcrResult.Language) Image=@ThumbnailBase64 />
+        <InstagramNotification Title="Text Angle:" SubTitle=@(OcrResult.TextAngle.ToString()) Image=@ThumbnailBase64 />
+        <InstagramNotification Title="Orientation:" SubTitle=@(OcrResult.Orientation) Image=@ThumbnailBase64 />
     </div>
     <div>
         @foreach (var region in OcrResult.Regions)
         {
-            <InstagramNotification Title="Region bounding box:" SubTitle=@(region.BoundingBox) ImageUrl=@Media.ImageUrl />
+            <InstagramNotification Title="Region bounding box:" SubTitle=@(region.BoundingBox) Image=@ThumbnailBase64 />
 
             foreach (var line in region.Lines)
             {
@@ -18,7 +18,7 @@
 
                 foreach (var word in line.Words)
                 {
-                    <InstagramNotification Title=@( $"{word.Text}") SubTitle=@($" Word bounding box: {word.BoundingBox}") ImageUrl=@Media.ImageUrl />
+                    <InstagramNotification Title=@( $"{word.Text}") SubTitle=@($" Word bounding box: {word.BoundingBox}") Image=@ThumbnailBase64 />
                 }
             }
         }
@@ -27,7 +27,24 @@
 
 @code {
     [Parameter]
-    public InstaPost Media { get; set; }
+    public Stream Thumbnail { get; set; }
     [Parameter]
     public OcrResult OcrResult { get; set; }
+
+    public string ThumbnailBase64;
+
+    protected override void OnInitialized()
+    {
+        ThumbnailBase64 = GetImageBase64();
+        StateHasChanged();
+    }
+
+    string GetImageBase64()
+    {
+        using (MemoryStream ms = new MemoryStream())
+        {
+            Thumbnail.CopyTo(ms);
+            return string.Format("data:image/png;base64,{0}", Convert.ToBase64String(ms.ToArray()));
+        }
+    }
 }
