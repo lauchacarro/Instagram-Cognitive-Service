@@ -5,7 +5,7 @@
 
 @inject ILocalStorageService localStorageService
 @inject NavigationManager navigationManager
-@inject ComputerVisionService computerVisionService
+@inject IComputerVisionService computerVisionService
 
 @if (isLoading)
 {
@@ -28,13 +28,13 @@ else
                     switch (optionEnum)
                     {
                         case ComputerVisionOption.AnalyzeImage:
-                            <ImageAnalysisNotifications Media="media" Analysis="analysis" />
+                            <ImageAnalysisNotifications Thumbnail="thumbnail" Analysis="analysis" />
                             break;
                         case ComputerVisionOption.OpticalCharacterRecognition:
-                            <OcrNotifications Media="media" OcrResult="ocrResult" />
+                            <OcrNotifications Thumbnail="thumbnail" OcrResult="ocrResult" />
                             break;
                         default:
-                            <ImageAnalysisNotifications Media="media" Analysis="analysis" />
+                            <ImageAnalysisNotifications Thumbnail="thumbnail" Analysis="analysis" />
                             break;
                     }
 
@@ -55,6 +55,7 @@ else
     private InstaPost media = null;
     private ImageAnalysis analysis = null;
     private OcrResult ocrResult = null;
+    private Stream thumbnail = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -93,20 +94,14 @@ else
             case ComputerVisionOption.AnalyzeImage:
                 analysis = await computerVisionService.AnalyzeImageUrl(media.ImageUrl);
                 break;
-            case ComputerVisionOption.DetectObjects:
-                break;
             case ComputerVisionOption.OpticalCharacterRecognition:
                 ocrResult = await computerVisionService.OcrUrl(media.ImageUrl);
-                break;
-            case ComputerVisionOption.ReadTheBatchText:
-                break;
-            case ComputerVisionOption.GenerateThumbnail:
-                break;
-            case ComputerVisionOption.DetectDomainSpecific:
                 break;
             default:
                 analysis = await computerVisionService.AnalyzeImageUrl(media.ImageUrl);
                 break;
         }
+
+        thumbnail = await computerVisionService.GenerateThumbnailUrl(media.ImageUrl);
     }
 }

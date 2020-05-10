@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,7 +11,7 @@ using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
 
 namespace InstagramComputerVision.Services
 {
-    public class ComputerVisionService
+    public class ComputerVisionService : IComputerVisionService
     {
         private readonly ILocalStorageService _localStorageService;
 
@@ -20,13 +21,20 @@ namespace InstagramComputerVision.Services
 
         }
 
-        public async Task<ImageAnalysis> AnalyzeImageUrl(string imageUrl)
+        public async Task<ComputerVisionClient> GetClient()
         {
             string computerVisionKey = await _localStorageService.GetItemAsync<string>(Constant.COMPUTERVISIONKEY);
             string computerVisionEndpoint = await _localStorageService.GetItemAsync<string>(Constant.COMPUTERVISIONENDPOINT);
 
             ComputerVisionClient client = new ComputerVisionClient(new ApiKeyServiceClientCredentials(computerVisionKey))
             { Endpoint = computerVisionEndpoint };
+
+            return client;
+        }
+
+        public async Task<ImageAnalysis> AnalyzeImageUrl(string imageUrl)
+        {
+            ComputerVisionClient client = await GetClient();
 
             List<VisualFeatureTypes> features = Enum.GetValues(typeof(VisualFeatureTypes)).Cast<VisualFeatureTypes>().ToList();
             List<Details> details = Enum.GetValues(typeof(Details)).Cast<Details>().ToList();
@@ -37,14 +45,18 @@ namespace InstagramComputerVision.Services
 
         public async Task<OcrResult> OcrUrl(string imageUrl)
         {
-            string computerVisionKey = await _localStorageService.GetItemAsync<string>(Constant.COMPUTERVISIONKEY);
-            string computerVisionEndpoint = await _localStorageService.GetItemAsync<string>(Constant.COMPUTERVISIONENDPOINT);
-
-            ComputerVisionClient client = new ComputerVisionClient(new ApiKeyServiceClientCredentials(computerVisionKey))
-            { Endpoint = computerVisionEndpoint };
+            ComputerVisionClient client = await GetClient();
 
             OcrResult remoteOcrResult = await client.RecognizePrintedTextAsync(true, imageUrl);
             return remoteOcrResult;
+        }
+
+        public async Task<Stream> GenerateThumbnailUrl(string imageUrl)
+        {
+            ComputerVisionClient client = await GetClient();
+
+            Stream thumbnailUrl = await client.GenerateThumbnailAsync(60, 60, imageUrl, true);
+            return thumbnailUrl;
         }
     }
 }
