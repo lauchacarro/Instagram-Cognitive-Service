@@ -58,5 +58,29 @@ namespace InstagramComputerVision.Services
             Stream thumbnailUrl = await client.GenerateThumbnailAsync(60, 60, imageUrl, true);
             return thumbnailUrl;
         }
+
+        public async Task<BatchReadFileHeaders> BatchReadFileUrl(string imageUrl)
+        {
+            ComputerVisionClient client = await GetClient();
+
+            BatchReadFileHeaders textHeaders = await client.BatchReadFileAsync(imageUrl);
+            return textHeaders;
+        }
+
+        public async Task<DetectResult> DetectObjectsUrl(string imageUrl)
+        {
+            ComputerVisionClient client = await GetClient();
+
+            DetectResult detectObjectAnalysis = await client.DetectObjectsAsync(imageUrl);
+            return detectObjectAnalysis;
+        }
+
+        public async Task<DomainModelResults> DetectDomainSpecificUrl(string imageUrl)
+        {
+            ComputerVisionClient client = await GetClient();
+
+            DomainModelResults resultsUrl = await client.AnalyzeImageByDomainAsync("landmarks", imageUrl);
+            return resultsUrl;
+        }
     }
 }
