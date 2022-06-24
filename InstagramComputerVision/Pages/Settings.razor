@@ -18,15 +18,21 @@
     private string key = string.Empty;
     private string endpoint = string.Empty;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (await localStorageService.ContainKeyAsync(Constant.COMPUTERVISIONKEY))
+        if (firstRender)
         {
-            key = await localStorageService.GetItemAsync<string>(Constant.COMPUTERVISIONKEY);
-        }
-        if (await localStorageService.ContainKeyAsync(Constant.COMPUTERVISIONENDPOINT))
-        {
-            endpoint = await localStorageService.GetItemAsync<string>(Constant.COMPUTERVISIONENDPOINT);
+
+            if (await localStorageService.ContainKeyAsync(Constant.COMPUTERVISIONKEY))
+            {
+                key = await localStorageService.GetItemAsync<string>(Constant.COMPUTERVISIONKEY);
+            }
+            if (await localStorageService.ContainKeyAsync(Constant.COMPUTERVISIONENDPOINT))
+            {
+                endpoint = await localStorageService.GetItemAsync<string>(Constant.COMPUTERVISIONENDPOINT);
+            }
+
+            StateHasChanged();
         }
     }
 
