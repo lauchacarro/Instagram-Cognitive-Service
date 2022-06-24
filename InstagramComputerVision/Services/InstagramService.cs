@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,6 +21,17 @@ namespace InstagramComputerVision.Services
         private readonly IInstaApi _instaApi;
         public InstagramService(IOptions<InstagramOptions> options)
         {
+
+            if (string.IsNullOrWhiteSpace(options.Value.Username))
+            {
+                throw new ArgumentException("El Username esta vacio");
+            }
+
+            if (string.IsNullOrWhiteSpace(options.Value.Password))
+            {
+                throw new ArgumentException("El Password esta vacio");
+            }
+
             UserSessionData userSession = new UserSessionData
             {
                 UserName = options.Value.Username,
