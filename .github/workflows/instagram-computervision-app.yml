@@ -3,6 +3,9 @@ on:
   push:
     branches:
     - main
+    
+  workflow_dispatch:
+  
 env:
   AZURE_WEBAPP_NAME: instagram-computervision-app
   AZURE_WEBAPP_PACKAGE_PATH: InstagramComputerVision/publish
