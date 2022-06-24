@@ -19,7 +19,7 @@
 
                 <figure class=@($"{scopedStyle.CssScopedClasses("header-image")} zero-margin")>
 
-                    <img class=@scopedStyle.CssScopedClasses("header-user-image") src="@Media.UserPicture" />
+                    <img crossorigin="anonymous" class=@scopedStyle.CssScopedClasses("header-user-image") src="@GetValidImageLink(Media.UserPicture)" />
 
                 </figure>
 
@@ -39,10 +39,9 @@
 
         </div>
 
-        <div class=@scopedStyle.CssScopedClasses("image-container")
-             style="background-image: url('@Media.ImageUrl.')"
-             @ondblclick=@LikeHandle>
-        </div>
+        <img crossorigin="anonymous" class=@scopedStyle.CssScopedClasses("image-container")
+             src="@GetValidImageLink(Media.ImageUrl)"
+             @ondblclick=@LikeHandle />
 
         <div class=@scopedStyle.CssScopedClasses("content")>
 
@@ -112,5 +111,18 @@
 
         if (OnOptionSelected.HasDelegate)
             await OnOptionSelected.InvokeAsync((Media, option));
+    }
+
+    string GetValidImageLink(string originalLink)
+    {
+        string corsAnywhere = "https://corsanywhere.herokuapp.com/";
+
+        string instagramCDNDomain = "https://scontent-iad3-1.cdninstagram.com";
+
+		Uri linkUri = new Uri(originalLink);
+		
+		var newlink = corsAnywhere + instagramCDNDomain + linkUri.PathAndQuery;
+		
+		return newlink;
     }
 }
