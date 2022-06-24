@@ -19,14 +19,23 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+        
     - name: Restore
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
     - name: Build
       run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
-    - name: Test
-      run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
+
     - name: Publish
       run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+      
+    - uses: microsoft/variable-substitution@v1 
+      with:
+          files: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/appsettings.json'
+      env:
+          InstagramOptions.Username: ${{ secrets.MY_INSTAGRAM_USERNAME }}
+          InstagramOptions.Password: ${{ secrets.MY_INSTAGRAM_PASSWORD }}
+
+      
     - name: Deploy to Azure WebApp
       uses: azure/webapps-deploy@v2
       with:
