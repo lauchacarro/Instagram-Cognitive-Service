@@ -36,10 +36,9 @@ namespace InstagramComputerVision.Services
         {
             ComputerVisionClient client = await GetClient();
 
-            List<VisualFeatureTypes> features = Enum.GetValues(typeof(VisualFeatureTypes)).Cast<VisualFeatureTypes>().ToList();
-            List<Details> details = Enum.GetValues(typeof(Details)).Cast<Details>().ToList();
+            IList<VisualFeatureTypes?> features = Enum.GetValues(typeof(VisualFeatureTypes)).Cast<VisualFeatureTypes?>().ToList();
 
-            ImageAnalysis results = await client.AnalyzeImageAsync(imageUrl, features, details);
+            ImageAnalysis results = await client.AnalyzeImageAsync(imageUrl, features);
             return results;
         }
 
@@ -57,14 +56,6 @@ namespace InstagramComputerVision.Services
 
             Stream thumbnailUrl = await client.GenerateThumbnailAsync(60, 60, imageUrl, true);
             return thumbnailUrl;
-        }
-
-        public async Task<BatchReadFileHeaders> BatchReadFileUrl(string imageUrl)
-        {
-            ComputerVisionClient client = await GetClient();
-
-            BatchReadFileHeaders textHeaders = await client.BatchReadFileAsync(imageUrl);
-            return textHeaders;
         }
 
         public async Task<DetectResult> DetectObjectsUrl(string imageUrl)

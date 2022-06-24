@@ -1,4 +1,5 @@
-﻿@*https://codepen.io/itslit/pen/OvZrvR*@
+﻿@using InstagramComputerVision.Helpers
+@*https://codepen.io/itslit/pen/OvZrvR*@
 
 <BlazorScopedCss.ScopedStyle EmbeddedStylePath="InstagramPost.razor.css"
                              Parent="this"
@@ -115,14 +116,6 @@
 
     string GetValidImageLink(string originalLink)
     {
-        string corsAnywhere = "https://corsanywhere.herokuapp.com/";
-
-        string instagramCDNDomain = "https://scontent-iad3-1.cdninstagram.com";
-
-		Uri linkUri = new Uri(originalLink);
-		
-		var newlink = corsAnywhere + instagramCDNDomain + linkUri.PathAndQuery;
-		
-		return newlink;
+        return CommonHelpers.GetValidImageLink(originalLink);
     }
 }

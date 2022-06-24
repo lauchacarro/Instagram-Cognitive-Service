@@ -1,5 +1,6 @@
 ﻿@page "/computervision"
 @page "/computervision/{Option}"
+@using InstagramComputerVision.Helpers
 @using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models
 @using InstagramComputerVision.Components.ComputerVision
 
@@ -92,16 +93,22 @@ else
         switch (optionEnum)
         {
             case ComputerVisionOption.AnalyzeImage:
-                analysis = await computerVisionService.AnalyzeImageUrl(media.ImageUrl);
+                analysis = await computerVisionService.AnalyzeImageUrl(GetValidImageLink(media.ImageUrl));
                 break;
             case ComputerVisionOption.OpticalCharacterRecognition:
-                ocrResult = await computerVisionService.OcrUrl(media.ImageUrl);
+                ocrResult = await computerVisionService.OcrUrl(GetValidImageLink(media.ImageUrl));
                 break;
             default:
-                analysis = await computerVisionService.AnalyzeImageUrl(media.ImageUrl);
+                analysis = await computerVisionService.AnalyzeImageUrl(GetValidImageLink(media.ImageUrl));
                 break;
         }
 
-        thumbnail = await computerVisionService.GenerateThumbnailUrl(media.ImageUrl);
+        thumbnail = await computerVisionService.GenerateThumbnailUrl(GetValidImageLink(media.ImageUrl));
+    }
+
+
+    string GetValidImageLink(string originalLink)
+    {
+        return CommonHelpers.GetValidImageLink(originalLink);
     }
 }
